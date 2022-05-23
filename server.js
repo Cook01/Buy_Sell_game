@@ -1,8 +1,8 @@
 //Dependencies
-let http = require("http");
-let express = require("express");
-let path = require("path");
-let socketIO = require("socket.io");
+const express = require("express");
+const http = require("http");
+const path = require("path");
+const { Server } = require("socket.io");
 
 //Game Engine Classes
 const {
@@ -16,17 +16,18 @@ const {
     //WhishListElement
 } = require("./src/server");
 
+const PORT = 3000;
 
 //=====================================================================================================================
 
 
 //Init
-let app = express();
-let server = http.Server(app);
-let io = socketIO(server);
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
 
 //Setup
-app.set('port', 5000);
+app.set('port', PORT);
 app.use("/client", express.static(__dirname + "/src/client"));
 
 //Routing
@@ -35,8 +36,8 @@ app.get("/", function(request, response){
 });
 
 //Server Start
-server.listen(5000, function(){
-    console.log("Starting server on port 5000");
+server.listen(PORT, function(){
+    console.log("Starting server on port " + PORT);
 });
 
 
@@ -51,6 +52,9 @@ itemList[0] = new Item(0, "Apple");
 itemList[1] = new Item(1, "Sword");
 itemList[2] = new Item(2, "Shield");
 itemList[3] = new Item(3, "Potion");
+itemList[4] = new Item(4, "Armor");
+itemList[5] = new Item(5, "Bow");
+itemList[6] = new Item(6, "Arrow");
 
 //Players
 let players = {}
@@ -65,7 +69,7 @@ for(let id in itemList)
 //Villagers List
 let villagerList = [];
 
-for(let i = 0; i < 1; i++){
+for(let i = 0; i < 4; i++){
     //New Villager (Random Starting Coins)
     let villager = new Villager(Math.round(Math.random()*(100-50)+50));
     villager.generateRandomWishList(itemList);
